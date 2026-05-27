@@ -1,16 +1,16 @@
-<div class="main-card" style="margin-top: 30px; border: 1px solid #233554; background: #ffffff;">
-    <div class="header-container" style="margin-bottom: 20px; padding-bottom: 10px;">
-        <h2 style="background: linear-gradient(135deg, #ff9900 0%, #ff5500 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 26px;">
+<div class="main-card" style="margin-top: 30px; background: #112240; border: 1px solid #233554; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+    <div class="header-container" style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #233554;">
+        <h2 style="background: linear-gradient(135deg, #ff9900 0%, #ffcc00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px; font-weight: 800; letter-spacing: -0.5px;">
             Amazon Live Orders
         </h2>
     </div>
     
     <div style="display: block; text-align: center; padding: 10px 0;">
-        <div style="background: #fff8f0; padding: 25px; border-radius: 14px; border: 2px dashed #ff9900; display: inline-block; min-width: 220px;">
-            <p style="margin: 0 0 8px 0; font-size: 15px; color: #555; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+        <div style="background: #0a192f; padding: 30px 25px; border-radius: 16px; border: 2px dashed #ff9900; display: inline-block; min-width: 240px; box-shadow: 0 0 15px rgba(255, 153, 0, 0.1);">
+            <p style="margin: 0 0 10px 0; font-size: 13px; color: #8892b0; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;">
                 Today's Total Orders
             </p>
-            <h1 id="amazon-count" style="margin: 0; color: #ff9900; font-size: 42px; font-weight: 800;">Loading...</h1>
+            <h1 id="amazon-count" style="margin: 0; color: #ff9900; font-size: 48px; font-weight: 800; text-shadow: 0 0 10px rgba(255, 153, 0, 0.3);">Loading...</h1>
         </div>
     </div>
 </div>
@@ -18,7 +18,7 @@
     async function fetchAmazonOrders() {
         const countElement = document.getElementById('amazon-count');
         try {
-            // ⚠️ APNA RENDER URL YAHAN NEECHE PASTE KARNA BHAI:
+            // Render URL ekdum perfect link hai bhai
             const RENDER_BACKEND_URL = "https://aghmare-amazon-backend.onrender.com"; 
             
             const response = await fetch(`${RENDER_BACKEND_URL}/api/amazon-orders`);
@@ -27,11 +27,15 @@
             if(data.status === "success") {
                 countElement.innerText = data.total_today;
             } else {
-                countElement.innerText = "Error";
+                // Agar Amazon credentials nahi hain, toh UI par safe message dikhayega
+                countElement.innerText = "Setup Pending";
+                countElement.style.fontSize = "24px";
+                countElement.style.color = "#ffdd67";
                 console.error(data.message);
             }
         } catch (error) {
             countElement.innerText = "Offline";
+            countElement.style.color = "#f43f5e";
             console.error("Backend connection failed:", error);
         }
     }
@@ -39,7 +43,7 @@
     // Page load hote hi chal jaye
     window.addEventListener('DOMContentLoaded', (event) => {
         fetchAmazonOrders();
-        // Har 10 minute me automatic refresh hoga background me
+        // Har 10 minute me automatic background me refresh hoga
         setInterval(fetchAmazonOrders, 600000); 
     });
 </script>
