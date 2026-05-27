@@ -1,0 +1,45 @@
+<div class="main-card" style="margin-top: 30px; border: 1px solid #233554; background: #ffffff;">
+    <div class="header-container" style="margin-bottom: 20px; padding-bottom: 10px;">
+        <h2 style="background: linear-gradient(135deg, #ff9900 0%, #ff5500 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 26px;">
+            Amazon Live Orders
+        </h2>
+    </div>
+    
+    <div style="display: block; text-align: center; padding: 10px 0;">
+        <div style="background: #fff8f0; padding: 25px; border-radius: 14px; border: 2px dashed #ff9900; display: inline-block; min-width: 220px;">
+            <p style="margin: 0 0 8px 0; font-size: 15px; color: #555; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                Today's Total Orders
+            </p>
+            <h1 id="amazon-count" style="margin: 0; color: #ff9900; font-size: 42px; font-weight: 800;">Loading...</h1>
+        </div>
+    </div>
+</div>
+<script>
+    async function fetchAmazonOrders() {
+        const countElement = document.getElementById('amazon-count');
+        try {
+            // ⚠️ APNA RENDER URL YAHAN NEECHE PASTE KARNA BHAI:
+            const RENDER_BACKEND_URL = "https://aghmare-amazon-backend.onrender.com"; 
+            
+            const response = await fetch(`${RENDER_BACKEND_URL}/api/amazon-orders`);
+            const data = await response.json();
+            
+            if(data.status === "success") {
+                countElement.innerText = data.total_today;
+            } else {
+                countElement.innerText = "Error";
+                console.error(data.message);
+            }
+        } catch (error) {
+            countElement.innerText = "Offline";
+            console.error("Backend connection failed:", error);
+        }
+    }
+
+    // Page load hote hi chal jaye
+    window.addEventListener('DOMContentLoaded', (event) => {
+        fetchAmazonOrders();
+        // Har 10 minute me automatic refresh hoga background me
+        setInterval(fetchAmazonOrders, 600000); 
+    });
+</script>
